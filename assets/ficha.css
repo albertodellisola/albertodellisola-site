@@ -212,3 +212,35 @@ html.ficha-aberta { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   #ficha-sessao .ficha-btn { transition: none; }
 }
+
+/* Botão flutuante "Agendar sessão" — ocupa o canto onde ficava o ícone verde do
+   WhatsApp (o Alberto não atende por WhatsApp). Abre a mesma ficha. */
+a.ficha-flutuante {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9990;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 22px;
+  border-radius: 999px;
+  background: #ffd124;
+  color: #001418 !important;
+  font: 700 15px/1.2 Poppins, system-ui, -apple-system, "Segoe UI", sans-serif;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  letter-spacing: normal;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+a.ficha-flutuante:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0, 0, 0, .4); }
+a.ficha-flutuante:focus-visible { outline: 3px solid #ffffff; outline-offset: 3px; }
+a.ficha-flutuante svg { width: 18px; height: 18px; flex: none; }
+html.ficha-aberta a.ficha-flutuante { display: none; }
+@media (max-width: 600px) {
+  a.ficha-flutuante { right: 14px; bottom: 14px; padding: 13px 18px; font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  a.ficha-flutuante { transition: none; }
+}
