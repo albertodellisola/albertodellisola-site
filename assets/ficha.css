@@ -1,0 +1,214 @@
+/* Ficha da sessão — mesmas cores e fontes da página (Elementor): fundo petróleo,
+   amarelo #FFD124 no botão, Poppins nos títulos e botões, Open Sans no texto.
+   Tudo sob #ficha-sessao para vencer os estilos globais do kit do Elementor. */
+html.ficha-aberta { overflow: hidden; }
+
+#ficha-sessao {
+  --f-fundo: #06232a;
+  --f-texto: #ffffff;
+  --f-suave: rgba(255, 255, 255, .74);
+  --f-linha: rgba(255, 255, 255, .16);
+  --f-amarelo: #ffd124;
+  --f-tinta: #001418;
+  --f-erro: #ffb4a8;
+  width: min(640px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--f-linha);
+  border-radius: 8px;
+  background: var(--f-fundo);
+  color: var(--f-texto);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .55);
+  overflow: hidden;
+}
+#ficha-sessao[open] { display: flex; }
+#ficha-sessao::backdrop { background: rgba(0, 12, 14, .8); }
+#ficha-sessao [hidden] { display: none !important; }
+
+#ficha-sessao .ficha-caixa {
+  position: relative;
+  width: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 40px 40px 32px;
+  font: 400 16px/1.6 "Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+#ficha-sessao h2 {
+  margin: 0 0 16px;
+  padding-right: 32px;
+  font: 600 28px/1.2 Poppins, system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--f-texto);
+  text-wrap: balance;
+}
+#ficha-sessao p { margin: 0 0 14px; color: var(--f-suave); font-size: 16px; }
+#ficha-sessao strong { color: var(--f-texto); font-weight: 700; }
+#ficha-sessao a:not(.ficha-btn) {
+  font: inherit;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--f-amarelo);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+#ficha-sessao .ficha-rotulo {
+  margin-bottom: 8px;
+  font: 600 13px/1.4 Poppins, system-ui, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--f-amarelo);
+}
+#ficha-sessao .ficha-inclui { margin: 0 0 14px; padding: 0; list-style: none; }
+#ficha-sessao .ficha-inclui li {
+  position: relative;
+  margin: 0 0 6px;
+  padding-left: 22px;
+  color: var(--f-texto);
+}
+#ficha-sessao .ficha-inclui li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: .62em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--f-amarelo);
+}
+#ficha-sessao .ficha-preco {
+  padding: 12px 0 18px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--f-linha);
+}
+#ficha-sessao .ficha-preco strong { font-size: 20px; }
+
+#ficha-sessao form { margin: 0; }
+#ficha-sessao .ficha-campo { display: block; margin: 0 0 16px; }
+#ficha-sessao .ficha-campo > span {
+  display: block;
+  margin-bottom: 6px;
+  font: 600 15px/1.4 Poppins, system-ui, sans-serif;
+  color: var(--f-texto);
+}
+#ficha-sessao input:not([type=checkbox]),
+#ficha-sessao textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 12px 14px;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #222529;
+  font: 400 16px/1.45 "Open Sans", system-ui, sans-serif;
+  box-shadow: none;
+}
+#ficha-sessao textarea { resize: vertical; min-height: 104px; }
+#ficha-sessao input::placeholder,
+#ficha-sessao textarea::placeholder { color: #7a8185; }
+#ficha-sessao input:focus-visible,
+#ficha-sessao textarea:focus-visible { outline: 3px solid var(--f-amarelo); outline-offset: 1px; }
+#ficha-sessao [aria-invalid=true] { border-color: var(--f-erro); }
+#ficha-sessao .ficha-campo small {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--f-suave);
+}
+#ficha-sessao .ficha-mel { position: absolute !important; left: -9999px !important; width: 1px !important; height: 1px !important; opacity: 0; }
+
+#ficha-sessao .ficha-aceite {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 4px 0 18px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--f-suave);
+  cursor: pointer;
+}
+#ficha-sessao .ficha-aceite input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 1px 0 0;
+  accent-color: var(--f-amarelo);
+}
+#ficha-sessao .ficha-aceite input[aria-invalid=true] { outline: 2px solid var(--f-erro); outline-offset: 2px; }
+
+#ficha-sessao .ficha-erro {
+  padding: 10px 14px;
+  border-left: 3px solid var(--f-erro);
+  background: rgba(255, 180, 168, .1);
+  color: #ffe1dc;
+  font-size: 15px;
+}
+
+#ficha-sessao .ficha-botoes { display: flex; flex-direction: column; gap: 10px; margin: 0 0 16px; }
+#ficha-sessao .ficha-btn {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 17px 24px;
+  border-radius: 4px;
+  font: 700 16px/1.3 Poppins, system-ui, sans-serif;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: normal;
+  cursor: pointer;
+  transition: transform .15s ease, filter .15s ease;
+}
+#ficha-sessao .ficha-btn:hover { transform: translateY(-1px); filter: brightness(1.04); }
+#ficha-sessao .ficha-btn:focus-visible { outline: 3px solid #ffffff; outline-offset: 2px; }
+#ficha-sessao .ficha-btn:disabled { opacity: .6; cursor: wait; transform: none; }
+#ficha-sessao .ficha-btn-pagar { border: 2px solid var(--f-amarelo); background: var(--f-amarelo); color: var(--f-tinta); }
+#ficha-sessao .ficha-btn-conversar { border: 2px solid rgba(255, 255, 255, .7); background: transparent; color: var(--f-texto); }
+#ficha-sessao .ficha-nota { font-size: 14px; line-height: 1.5; }
+#ficha-sessao .ficha-urgencia {
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--f-linha);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+#ficha-sessao .ficha-x {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--f-texto);
+  font: 400 30px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+#ficha-sessao .ficha-x:hover { background: rgba(255, 255, 255, .1); }
+#ficha-sessao .ficha-x:focus-visible { outline: 3px solid var(--f-amarelo); }
+
+/* Celular: a ficha ocupa a tela inteira, rolando por dentro. */
+@media (max-width: 600px) {
+  #ficha-sessao {
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+  }
+  #ficha-sessao .ficha-caixa { padding: 56px 20px 28px; }
+  #ficha-sessao h2 { font-size: 24px; padding-right: 0; }
+  #ficha-sessao .ficha-btn { padding: 16px 16px; font-size: 15px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #ficha-sessao .ficha-btn { transition: none; }
+}
