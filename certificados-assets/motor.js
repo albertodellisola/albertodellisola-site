@@ -303,15 +303,39 @@ const MAX_LINHAS = 3, LARG_TETO = 1010;
 
 /* Título e nome do aluno saem numa linha só. Passando destas larguras o texto
    invadiria a moldura, então o corpo cede — a largura é o limite, não o corpo.
-   O título mais longo do Canva tem 764 e o nome mais longo 1056: nenhum
-   dos 21 cursos originais chega a encolher. */
-const LARG_MAX_TITULO = 940, LARG_MAX_NOME = 1120;
 
+   O teto do NOME é medido na arte, não escolhido: a borda interna da moldura vai
+   de x=162,0 a x=1251,4 em unidades do design (1089,4 de vão livre, simétrico em
+   torno de 707). Tirando ~40 de papel de cada lado — a mesma folga que a
+   descrição já usa no LARG_TETO — sobram 1010.
+
+   ISTO ERA UM DEFEITO: o teto estava em 1120, MAIS LARGO que a própria moldura,
+   e um nome de 47 letras passava por cima do desenho. Achado pelo dono em
+   23/09/2026, olhando o certificado — nenhuma medição automática reclamava,
+   porque o código só comparava o texto com o próprio teto errado.
+
+   O risco horizontal sob o nome mede 698,2 e NÃO é o limite: o Canva original já
+   escrevia por cima dele (o nome mais longo dos 21 media 1056). */
+const LARG_MAX_TITULO = 940, LARG_MAX_NOME = 1010;
+
+/* Piso do corpo do nome. Só existe para um nome absurdo não virar poeira; com o
+   teto de 1010 ele praticamente não pega — um nome de 67 letras ainda pede 40,4.
+   Abaixo de 28 a letra manuscrita deixa de ser legível impressa. */
+const FS_MIN_NOME = 28, FS_MIN_TITULO = 24;
+
+/* Encolhe até caber. `fsMin` é último recurso, não meta: quando ele pega, o
+   texto AINDA estoura, e por isso a função avisa em vez de entregar calada. */
 function encolherPara(ctx, bloco, texto, largMax, fsMin){
   fonte(ctx, bloco);
   const w = ctx.measureText(texto).width;
   if (w <= largMax || !w) return bloco;
-  return { ...bloco, fs: bloco.fs * Math.max(fsMin / bloco.fs, largMax / w) };
+
+  const querido = bloco.fs * (largMax / w);
+  if (querido >= fsMin) return { ...bloco, fs: querido };
+
+  console.warn(`texto largo demais para caber: «${texto}» pediria corpo `
+    + `${querido.toFixed(1)} e o piso é ${fsMin}`);
+  return { ...bloco, fs: fsMin };
 }
 
 function ajustarDescricao(ctx, base, texto, largura){
@@ -344,11 +368,11 @@ async function desenhar(ctx, escala, dados){
   ctx.textAlign = "center";
   ctx.textBaseline = "alphabetic";
 
-  if (L.titulo) escrever(ctx, encolherPara(ctx, L.titulo, curso.t, LARG_MAX_TITULO, 24), curso.t);
+  if (L.titulo) escrever(ctx, encolherPara(ctx, L.titulo, curso.t, LARG_MAX_TITULO, FS_MIN_TITULO), curso.t);
   if (L.frase)  escrever(ctx, L.frase, L.frase.txt);
 
   const txtNome = nome || " ";
-  escrever(ctx, encolherPara(ctx, L.nome, txtNome, LARG_MAX_NOME, 40), txtNome);
+  escrever(ctx, encolherPara(ctx, L.nome, txtNome, LARG_MAX_NOME, FS_MIN_NOME), txtNome);
 
   const bDesc = ajustarDescricao(ctx, L.desc, frase(curso), (curso.larg || 805) + FOLGA_QUEBRA);
   escreverLinhas(ctx, bDesc.bloco, bDesc.linhas, L.desc.y);
