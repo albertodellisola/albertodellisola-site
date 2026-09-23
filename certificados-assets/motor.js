@@ -301,41 +301,82 @@ function escrever(ctx, b, texto, topo){
    o corpo diminui. Os 21 cursos do Canva passam sem tocar em nada disso. */
 const MAX_LINHAS = 3, LARG_TETO = 1010;
 
-/* Título e nome do aluno saem numa linha só. Passando destas larguras o texto
-   invadiria a moldura, então o corpo cede — a largura é o limite, não o corpo.
+/* Título e nome do aluno saem numa linha só. Passando da largura útil do modelo
+   o texto invadiria o desenho, então o corpo cede — a largura é o limite.
 
-   O teto do NOME é medido na arte, não escolhido: a borda interna da moldura vai
-   de x=162,0 a x=1251,4 em unidades do design (1089,4 de vão livre, simétrico em
-   torno de 707). Tirando ~40 de papel de cada lado — a mesma folga que a
-   descrição já usa no LARG_TETO — sobram 1010.
+   AREA_UTIL não é escolha: sai de `medidas/medir_area_util.py`, que lê as três
+   artes e acha o que limita cada uma — a moldura no turquesa e no dourado, a
+   onda branca das laterais no marinho — e ainda desconta 40 unidades de papel
+   de cada lado (~8 mm no A4). O resultado fica em `medidas/area_util.json`, e o
+   `gate.py` barra o build se estes números deixarem de bater com ele.
 
-   ISTO ERA UM DEFEITO: o teto estava em 1120, MAIS LARGO que a própria moldura,
-   e um nome de 47 letras passava por cima do desenho. Achado pelo dono em
-   23/09/2026, olhando o certificado — nenhuma medição automática reclamava,
-   porque o código só comparava o texto com o próprio teto errado.
+   ISTO ERA UM DEFEITO: havia um teto único de 1120, MAIS LARGO que a moldura do
+   turquesa (1089,4 de vão livre), e um nome de 47 letras passava por cima do
+   desenho. Achado pelo dono em 23/09/2026 olhando o certificado — nenhuma
+   medição reclamava, porque o código comparava o texto com o próprio teto errado.
 
    O risco horizontal sob o nome mede 698,2 e NÃO é o limite: o Canva original já
    escrevia por cima dele (o nome mais longo dos 21 media 1056). */
-const LARG_MAX_TITULO = 940, LARG_MAX_NOME = 1010;
+const AREA_UTIL = { turquesa: 1008.8, dourado: 1010.0, marinho: 1073.5 };
+const AREA_UTIL_PADRAO = 1008.8;          // modelo desconhecido usa a mais apertada
 
-/* Piso do corpo do nome. Só existe para um nome absurdo não virar poeira; com o
-   teto de 1010 ele praticamente não pega — um nome de 67 letras ainda pede 40,4.
+function areaUtil(modelo){
+  return AREA_UTIL[modelo] || AREA_UTIL_PADRAO;
+}
+
+/* O título mais longo do Canva tem 764; 940 cabe folgado em qualquer das três
+   artes, e o gate confere que 940 não passa da área útil de nenhuma. */
+const LARG_MAX_TITULO = 940;
+
+/* Piso do corpo. Só existe para um nome absurdo não virar poeira; com o teto
+   certo ele praticamente não pega — um nome de 67 letras ainda pede 40,4.
    Abaixo de 28 a letra manuscrita deixa de ser legível impressa. */
-const FS_MIN_NOME = 28, FS_MIN_TITULO = 24;
+/* Sem piso para o nome: ver encolherPara. O do título continua. */
+const FS_MIN_NOME = 0, FS_MIN_TITULO = 24;
 
-/* Encolhe até caber. `fsMin` é último recurso, não meta: quando ele pega, o
-   texto AINDA estoura, e por isso a função avisa em vez de entregar calada. */
+/* Largura da TINTA, não do avanço. `measureText().width` é o quanto o cursor
+   anda, e na Dancing Script a barriga e o rabo das letras passam disso — um nome
+   encolhido para caber exatamente na área útil ainda pintava 1 a 5 unidades por
+   cima do desenho. Com textAlign "center" a tinta ocupa left+right em torno do
+   ponto. Achado pelo gate em 23/09/2026. */
+function largTinta(ctx, texto){
+  const m = ctx.measureText(texto);
+  const t = (m.actualBoundingBoxLeft || 0) + (m.actualBoundingBoxRight || 0);
+  return t || m.width;                 // navegador sem a métrica: melhor o avanço que nada
+}
+
+/* Encolhe até a TINTA caber.
+   `fsMin` nulo = sem piso: o texto encolhe o quanto precisar, e caber ganha de
+   ficar grande. É o caso do NOME DO ALUNO — regra do dono, 23/09/2026: «o nome
+   nunca pode estourar, sempre readequar a fonte». O aviso de ilegibilidade
+   continua, como aviso, não como trava.
+   O TÍTULO mantém piso: é conteúdo curado, e um título que só cabe minúsculo é
+   erro de cadastro, que tem de aparecer. */
+const FS_ILEGIVEL = 28;                // abaixo disto a manuscrita não lê impressa
+
 function encolherPara(ctx, bloco, texto, largMax, fsMin){
   fonte(ctx, bloco);
-  const w = ctx.measureText(texto).width;
-  if (w <= largMax || !w) return bloco;
+  let t = largTinta(ctx, texto);
+  if (t <= largMax || !t) return bloco;
 
-  const querido = bloco.fs * (largMax / w);
-  if (querido >= fsMin) return { ...bloco, fs: querido };
+  let fs = bloco.fs;
+  // a tinta não é exatamente proporcional ao corpo (hinting, arredondamento),
+  // então mede de novo em vez de confiar numa regra de três só
+  for (let i = 0; i < 6 && t > largMax; i++){
+    fs *= largMax / t * 0.999;
+    if (fsMin && fs < fsMin) { fs = fsMin; fonte(ctx, { ...bloco, fs }); t = largTinta(ctx, texto); break; }
+    fonte(ctx, { ...bloco, fs });
+    t = largTinta(ctx, texto);
+  }
 
-  console.warn(`texto largo demais para caber: «${texto}» pediria corpo `
-    + `${querido.toFixed(1)} e o piso é ${fsMin}`);
-  return { ...bloco, fs: fsMin };
+  if (t > largMax){
+    console.warn(`texto largo demais para caber: «${texto}» ainda mede `
+      + `${t.toFixed(1)} com corpo ${fs.toFixed(1)}, e o teto é ${largMax}`);
+  } else if (fs < FS_ILEGIVEL){
+    console.warn(`texto encolhido para corpo ${fs.toFixed(1)}, abaixo do legível `
+      + `(${FS_ILEGIVEL}): «${texto}»`);
+  }
+  return { ...bloco, fs };
 }
 
 function ajustarDescricao(ctx, base, texto, largura){
@@ -372,7 +413,7 @@ async function desenhar(ctx, escala, dados){
   if (L.frase)  escrever(ctx, L.frase, L.frase.txt);
 
   const txtNome = nome || " ";
-  escrever(ctx, encolherPara(ctx, L.nome, txtNome, LARG_MAX_NOME, FS_MIN_NOME), txtNome);
+  escrever(ctx, encolherPara(ctx, L.nome, txtNome, areaUtil(curso.m), FS_MIN_NOME), txtNome);
 
   const bDesc = ajustarDescricao(ctx, L.desc, frase(curso), (curso.larg || 805) + FOLGA_QUEBRA);
   escreverLinhas(ctx, bDesc.bloco, bDesc.linhas, L.desc.y);
