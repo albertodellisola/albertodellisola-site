@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Emissor de Certificados — Instituto Dell'Isola</title>
+
+<style>
+@font-face{font-family:'Montserrat';font-weight:400;font-style:normal;font-display:block;src:url(../certificados-assets/fontes/Montserrat-Regular.woff2) format('woff2')}
+@font-face{font-family:'Montserrat';font-weight:500;font-style:normal;font-display:block;src:url(../certificados-assets/fontes/Montserrat-Medium.woff2) format('woff2')}
+@font-face{font-family:'Montserrat';font-weight:700;font-style:normal;font-display:block;src:url(../certificados-assets/fontes/Montserrat-Bold.woff2) format('woff2')}
+@font-face{font-family:'DancingScript';font-weight:400;font-style:normal;font-display:block;src:url(../certificados-assets/fontes/DancingScript-Regular.woff2) format('woff2')}
+@font-face{font-family:'Arimo';font-weight:400;font-style:normal;font-display:block;src:url(../certificados-assets/fontes/Arimo-Regular.woff2) format('woff2')}
+
+:root{
+  --tinta:#10222a; --tinta-fraca:#4d6a71; --tinta-tenue:#7d979d;
+  --fundo:#eef3f3; --papel:#ffffff; --palco:#3d4f52;
+  --traco:#d2dedf; --traco-forte:#b6c8ca;
+  --acento:#0b8287; --acento-forte:#096b70; --acento-tenue:#e2f1f1;
+  --turquesa:#10a8ac; --dourado:#a9862f; --marinho:#1c1d57;
+  --alerta:#a4442a;
+  --sombra:0 1px 2px rgba(16,34,42,.07), 0 8px 24px -12px rgba(16,34,42,.22);
+  --raio:10px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --tinta:#e2eeee; --tinta-fraca:#9db2b6; --tinta-tenue:#6f878c;
+    --fundo:#0c1517; --papel:#141f22; --palco:#080f10;
+    --traco:#233437; --traco-forte:#31474b;
+    --acento:#2cc0c5; --acento-forte:#4dd4d8; --acento-tenue:#132a2b;
+    --turquesa:#2cc0c5; --dourado:#d0a84a; --marinho:#8b8ee0;
+    --alerta:#e08a6d;
+    --sombra:0 1px 2px rgba(0,0,0,.4), 0 8px 28px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --tinta:#e2eeee; --tinta-fraca:#9db2b6; --tinta-tenue:#6f878c;
+  --fundo:#0c1517; --papel:#141f22; --palco:#080f10;
+  --traco:#233437; --traco-forte:#31474b;
+  --acento:#2cc0c5; --acento-forte:#4dd4d8; --acento-tenue:#132a2b;
+  --turquesa:#2cc0c5; --dourado:#d0a84a; --marinho:#8b8ee0;
+  --alerta:#e08a6d;
+  --sombra:0 1px 2px rgba(0,0,0,.4), 0 8px 28px -12px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+/* .grupo/.bt definem display, que venceria o [hidden] da folha do navegador */
+[hidden]{display:none !important}
+body{
+  margin:0; background:var(--fundo); color:var(--tinta);
+  font-family:'Montserrat',system-ui,sans-serif; font-size:14px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{margin:0; text-wrap:balance; font-weight:700; letter-spacing:-.01em}
+button,input,select,textarea{font:inherit; color:inherit}
+
+/* ---------- cabeçalho ---------- */
+.topo{
+  display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+  padding:20px 26px; border-bottom:1px solid var(--traco); background:var(--papel);
+}
+.topo h1{font-size:17px}
+.topo .sub{
+  font-family:'Arimo',sans-serif; font-size:12px; color:var(--tinta-fraca);
+  letter-spacing:.02em;
+}
+.topo .dir{margin-left:auto; display:flex; gap:8px; align-items:center}
+
+/* ---------- estrutura ---------- */
+.corpo{display:grid; grid-template-columns:404px 1fr; align-items:start; min-height:calc(100vh - 62px)}
+.painel{
+  padding:22px 26px 40px; display:flex; flex-direction:column; gap:22px;
+  border-right:1px solid var(--traco); background:var(--papel);
+  position:sticky; top:0; max-height:100vh; overflow-y:auto;
+  min-height:calc(100vh - 62px);
+}
+.palco{
+  padding:26px; background:var(--palco);
+  display:flex; flex-direction:column; gap:18px; align-items:center;
+  min-height:calc(100vh - 62px);
+}
+@media (max-width:900px){
+  .corpo{grid-template-columns:1fr}
+  .painel{position:static; max-height:none; border-right:0; border-bottom:1px solid var(--traco)}
+  .palco{min-height:0}
+}
+
+/* ---------- campos ---------- */
+.grupo{display:flex; flex-direction:column; gap:9px}
+.rotulo{
+  font-family:'Arimo',sans-serif; font-size:11px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--tinta-tenue); font-weight:700;
+}
+.campo{
+  width:100%; padding:10px 12px; border:1px solid var(--traco-forte); border-radius:var(--raio);
+  background:var(--papel); color:var(--tinta); font-size:14px;
+}
+select.campo{appearance:none; background-image:linear-gradient(45deg,transparent 50%,var(--tinta-fraca) 50%),linear-gradient(135deg,var(--tinta-fraca) 50%,transparent 50%); background-position:calc(100% - 17px) 18px,calc(100% - 12px) 18px; background-size:5px 5px,5px 5px; background-repeat:no-repeat; padding-right:34px}
+textarea.campo{resize:vertical; min-height:132px; line-height:1.65; font-size:13.5px}
+.campo:focus-visible, .campo:focus{outline:2px solid var(--acento); outline-offset:1px; border-color:var(--acento)}
+.dica{font-size:12px; color:var(--tinta-tenue); line-height:1.45}
+.linha2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+
+/* segmentado */
+.seg{display:flex; border:1px solid var(--traco-forte); border-radius:var(--raio); overflow:hidden}
+.seg button{
+  flex:1; padding:9px 6px; border:0; background:var(--papel); color:var(--tinta-fraca);
+  cursor:pointer; font-size:13px; font-weight:500;
+}
+.seg button+button{border-left:1px solid var(--traco-forte)}
+.seg button[aria-pressed="true"]{background:var(--acento); color:#fff; font-weight:600}
+.seg button:focus-visible{outline:2px solid var(--acento); outline-offset:-3px}
+
+/* botões */
+.bt{
+  padding:11px 16px; border-radius:var(--raio); border:1px solid var(--traco-forte);
+  background:var(--papel); color:var(--tinta); cursor:pointer; font-weight:600; font-size:13.5px;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+}
+.bt:hover{border-color:var(--acento); color:var(--acento)}
+.bt:focus-visible{outline:2px solid var(--acento); outline-offset:2px}
+.bt[disabled]{opacity:.45; cursor:not-allowed}
+.bt.forte{background:var(--acento); border-color:var(--acento); color:#fff}
+.bt.forte:hover{background:var(--acento-forte); border-color:var(--acento-forte); color:#fff}
+.bt.mini{padding:7px 11px; font-size:12px; font-weight:500}
+
+/* amostras de cor */
+.cores{display:flex; flex-wrap:wrap; gap:7px}
+.cores button{
+  display:flex; align-items:center; gap:7px; padding:6px 10px 6px 7px; cursor:pointer;
+  border:1px solid var(--traco-forte); border-radius:999px; background:var(--papel);
+  color:var(--tinta-fraca); font-size:12.5px; font-weight:500;
+}
+.cores button::before{
+  content:""; width:13px; height:13px; border-radius:50%;
+  background:var(--amostra); box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);
+}
+.cores button:hover{border-color:var(--tinta-tenue); color:var(--tinta)}
+.cores button:focus-visible{outline:2px solid var(--acento); outline-offset:2px}
+.cores button[aria-checked="true"]{
+  border-color:var(--amostra); color:var(--tinta); font-weight:600;
+  box-shadow:inset 0 0 0 1px var(--amostra);
+}
+
+/* etiqueta de modelo */
+.selo{
+  display:inline-flex; align-items:center; gap:6px; font-family:'Arimo',sans-serif;
+  font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--tinta-fraca);
+}
+.selo::before{content:""; width:9px; height:9px; border-radius:2px; background:var(--cor,var(--turquesa))}
+
+/* ---------- palco / prévia ---------- */
+.moldura{
+  width:100%; max-width:min(100%,980px); background:#fff; border-radius:4px;
+  box-shadow:0 2px 6px rgba(0,0,0,.3), 0 24px 60px -24px rgba(0,0,0,.65);
+  overflow:hidden; line-height:0;
+}
+.moldura canvas{width:100%; height:auto; display:block}
+.barra{
+  width:100%; max-width:min(100%,980px); display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+}
+.barra .esq{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-right:auto}
+.contexto{
+  font-family:'Arimo',sans-serif; font-size:12px; color:#cfdcdd; letter-spacing:.02em;
+}
+.contexto b{color:#fff; font-weight:400}
+.palco .bt{background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.22); color:#eaf3f3}
+.palco .bt:hover{background:rgba(255,255,255,.14); border-color:#fff; color:#fff}
+.palco .bt.forte{background:var(--turquesa); border-color:var(--turquesa); color:#04262a}
+.palco .bt.forte:hover{background:#3ecfd3; border-color:#3ecfd3; color:#04262a}
+
+/* estado */
+.estado{
+  font-family:'Arimo',sans-serif; font-size:12.5px; color:#cfdcdd;
+  min-height:18px; letter-spacing:.01em;
+}
+.estado.erro{color:#ffb99f}
+
+/* lista de nomes em lote */
+.contador{
+  font-family:'Arimo',sans-serif; font-size:12px; color:var(--tinta-tenue);
+  display:flex; justify-content:space-between; gap:10px;
+}
+.contador b{color:var(--acento); font-weight:700; font-variant-numeric:tabular-nums}
+
+/* diálogo */
+dialog{
+  border:1px solid var(--traco-forte); border-radius:14px; padding:0; background:var(--papel);
+  color:var(--tinta); max-width:460px; width:calc(100vw - 32px); box-shadow:var(--sombra);
+}
+dialog::backdrop{background:rgba(8,20,22,.55)}
+.dlg-topo{padding:20px 22px 0; display:flex; flex-direction:column; gap:5px}
+.dlg-topo h2{font-size:15px}
+.dlg-corpo{padding:18px 22px; display:flex; flex-direction:column; gap:16px}
+.dlg-pe{padding:0 22px 20px; display:flex; gap:10px; justify-content:flex-end}
+
+.aviso{
+  border-left:3px solid var(--acento); background:var(--acento-tenue);
+  padding:10px 12px; border-radius:0 var(--raio) var(--raio) 0;
+  font-size:12.5px; color:var(--tinta-fraca); line-height:1.5;
+}
+
+/* cursos próprios */
+.meus{display:flex; flex-direction:column; gap:7px}
+.meus .item{
+  display:flex; align-items:center; gap:9px; padding:7px 10px;
+  border:1px solid var(--traco); border-radius:var(--raio); font-size:12.5px;
+}
+.meus .item span{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.meus .item button{
+  border:0; background:none; color:var(--tinta-tenue); cursor:pointer; padding:3px 5px;
+  font-family:'Arimo',sans-serif; font-size:11px; letter-spacing:.05em; text-transform:uppercase;
+}
+.meus .item button:hover{color:var(--alerta)}
+
+@media (prefers-reduced-motion:no-preference){
+  .bt,.campo,.seg button{transition:background .14s ease, border-color .14s ease, color .14s ease}
+}
+</style>
+
+<div class="topo">
+  <h1>Emissor de Certificados</h1>
+  <div class="sub">Instituto Dell'Isola · Sociedade Brasileira de Hipnose</div>
+  <div class="dir"><button class="bt mini" id="btNovoCurso">Novo curso</button></div>
+</div>
+
+<div class="corpo">
+  <div class="painel">
+
+    <div class="grupo">
+      <label class="rotulo" for="curso">Curso</label>
+      <select class="campo" id="curso"></select>
+      <div class="contador"><span class="selo" id="seloModelo">modelo</span><span id="infoCarga"></span></div>
+    </div>
+
+    <div class="grupo" id="grupoCor">
+      <label class="rotulo" for="cor">Cor da moldura</label>
+      <div class="cores" id="cores" role="radiogroup" aria-label="Cor da moldura"></div>
+      <div class="dica">Fica salva para este curso, então cada curso sai sempre na mesma cor.</div>
+    </div>
+
+    <div class="grupo">
+      <div class="rotulo">Quantos certificados</div>
+      <div class="seg" role="group" aria-label="Quantidade">
+        <button type="button" id="mUm" aria-pressed="true">Um nome</button>
+        <button type="button" id="mVarios" aria-pressed="false">Vários nomes</button>
+      </div>
+    </div>
+
+    <div class="grupo" id="boxUm">
+      <label class="rotulo" for="nome">Nome completo do aluno</label>
+      <input class="campo" id="nome" placeholder="Ex.: Maria Aparecida de Souza" autocomplete="off">
+    </div>
+
+    <div class="grupo" id="boxVarios" hidden>
+      <label class="rotulo" for="nomes">Nomes — um por linha</label>
+      <textarea class="campo" id="nomes" placeholder="Maria Aparecida de Souza&#10;João Batista Ferreira&#10;Ana Cláudia Nogueira"></textarea>
+      <div class="contador"><span><b id="qtdNomes">0</b> nomes</span><span id="avisoNomes"></span></div>
+    </div>
+
+    <div class="linha2">
+      <div class="grupo">
+        <label class="rotulo" for="cidade">Cidade</label>
+        <input class="campo" id="cidade" value="Belo Horizonte" autocomplete="off">
+      </div>
+      <div class="grupo">
+        <label class="rotulo" for="data">Data</label>
+        <input class="campo" id="data" type="date">
+      </div>
+    </div>
+
+    <div class="grupo">
+      <label class="rotulo" for="resol">Resolução do arquivo</label>
+      <select class="campo" id="resol">
+        <option value="2.481">Alta — 3508 px, 300 dpi em A4</option>
+        <option value="1.697">Padrão — 2400 px, igual ao Canva</option>
+      </select>
+    </div>
+
+    <div class="grupo" id="grupoMeus" hidden>
+      <div class="rotulo">Cursos que você criou</div>
+      <div class="meus" id="listaMeus"></div>
+    </div>
+
+    <div class="aviso">
+      Os certificados são gerados no seu navegador. Nada é enviado para nenhum servidor,
+      e o app funciona sem internet depois de aberto.
+    </div>
+  </div>
+
+  <div class="palco">
+    <div class="moldura"><canvas id="tela" width="1414" height="1000" aria-label="Prévia do certificado"></canvas></div>
+    <div class="barra">
+      <div class="esq">
+        <div class="contexto" id="contexto"></div>
+      </div>
+      <button class="bt forte" id="btPdf">Baixar PDF</button>
+      <button class="bt" id="btPng">Baixar PNG</button>
+      <button class="bt" id="btZip" hidden>Baixar todos (.zip)</button>
+    </div>
+    <div class="estado" id="estado"></div>
+  </div>
+</div>
+
+<dialog id="dlgCurso">
+  <form method="dialog">
+    <div class="dlg-topo">
+      <h2>Novo curso</h2>
+      <div class="dica">Fica salvo neste navegador e aparece na lista junto com os cursos do Canva.</div>
+    </div>
+    <div class="dlg-corpo">
+      <div class="grupo">
+        <label class="rotulo" for="nvTitulo">Título — aparece no topo do certificado</label>
+        <input class="campo" id="nvTitulo" placeholder="Ex.: Hipnose Aplicada ao Esporte" required>
+      </div>
+      <div class="grupo">
+        <label class="rotulo" for="nvFrase">Nome do curso dentro da frase</label>
+        <input class="campo" id="nvFrase" placeholder="Deixe vazio para repetir o título">
+        <div class="dica">A frase sai como “concluiu com sucesso o curso <b>…</b>, com carga horária de …”. Alguns cursos usam aqui um nome diferente do título.</div>
+      </div>
+      <div class="linha2">
+        <div class="grupo">
+          <label class="rotulo" for="nvHoras">Carga horária</label>
+          <input class="campo" id="nvHoras" type="number" min="1" max="999" value="20" required>
+        </div>
+        <div class="grupo">
+          <label class="rotulo" for="nvModelo">Modelo</label>
+          <select class="campo" id="nvModelo">
+            <option value="turquesa">Turquesa</option>
+            <option value="dourado">Dourado</option>
+            <option value="marinho">Marinho PNL/SBH</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="dlg-pe">
+      <button class="bt" value="cancelar" type="submit">Cancelar</button>
+      <button class="bt forte" value="salvar" type="submit" id="btSalvarCurso">Salvar curso</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="../certificados-assets/motor.js"></script>
+<script>
+"use strict";
+
+/* ========================= interface ========================= */
+
+let modoLote = false;
+
+function nomesDaLista(){
+  return $("#nomes").value.split("\n").map((s) => s.trim()).filter(Boolean);
+}
+
+function nomeAtual(){
+  return modoLote ? (nomesDaLista()[0] || "") : $("#nome").value.trim();
+}
+
+function dadosAtuais(nome){
+  return {
+    curso: cursoAtual(),
+    nome: nome !== undefined ? nome : nomeAtual(),
+    cidade: $("#cidade").value.trim() || "Belo Horizonte",
+    dataISO: $("#data").value || new Date().toISOString().slice(0, 10),
+  };
+}
+
+function encherCursos(sel){
+  const el = $("#curso");
+  const lista = todosCursos();
+  el.innerHTML = "";
+  const gCanva = document.createElement("optgroup"); gCanva.label = "Cursos do Instituto";
+  const gMeus  = document.createElement("optgroup"); gMeus.label  = "Cursos que você criou";
+  lista.forEach((c, i) => {
+    const o = document.createElement("option");
+    o.value = i; o.textContent = `${c.t} — ${doisDig(c.h)}h`;
+    (i < CURSOS.length ? gCanva : gMeus).appendChild(o);
+  });
+  el.appendChild(gCanva);
+  if (gMeus.children.length) el.appendChild(gMeus);
+  el.value = sel !== undefined ? sel : 0;
+  desenharMeus();
+}
+
+function desenharMeus(){
+  const meus = meusCursos();
+  $("#grupoMeus").hidden = meus.length === 0;
+  const cx = $("#listaMeus");
+  cx.innerHTML = "";
+  meus.forEach((c, i) => {
+    const d = document.createElement("div");
+    d.className = "item";
+    const s = document.createElement("span");
+    s.textContent = `${c.t} — ${doisDig(c.h)}h`;
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = "Excluir";
+    b.setAttribute("aria-label", `Excluir o curso ${c.t}`);
+    b.onclick = () => {
+      const lista = meusCursos(); lista.splice(i, 1); gravarMeus(lista);
+      encherCursos(0); atualizar();
+    };
+    d.append(s, b); cx.appendChild(d);
+  });
+}
+
+function desenharCores(curso){
+  const cx = $("#cores");
+  const atual = corDoCurso(curso);
+  $("#grupoCor").hidden = curso.m !== MODELO_COLORIVEL;
+  cx.innerHTML = "";
+  for (const cor of CORES){
+    const b = document.createElement("button");
+    b.type = "button";
+    b.style.setProperty("--amostra", cor.am);
+    b.textContent = cor.nome;
+    b.setAttribute("role", "radio");
+    b.setAttribute("aria-checked", String(cor.id === atual));
+    b.onclick = async () => {
+      gravarCorDoCurso(curso, cor.id);
+      dizer(cacheArte[curso.m + "|" + cor.id] || cor.original ? "" : "Preparando a cor…");
+      await atualizar();
+      dizer("");
+    };
+    cx.appendChild(b);
+  }
+}
+
+let pedido = 0;
+async function atualizar(){
+  const meu = ++pedido;
+  const c = cursoAtual();
+  if (!c) return;
+  desenharCores(c);
+
+  const corEscolhida = CORES.find(x => x.id === corDoCurso(c));
+  const cores = { turquesa: corEscolhida.am, dourado: "var(--dourado)", marinho: "var(--marinho)" };
+  const nomes = { turquesa: `Moldura ${corEscolhida.nome.toLowerCase()}`, dourado: "Modelo dourado", marinho: "Modelo marinho" };
+  const selo = $("#seloModelo");
+  selo.style.setProperty("--cor", cores[c.m]);
+  selo.textContent = nomes[c.m];
+  $("#infoCarga").textContent = `${doisDig(c.h)} horas${c.programa ? " · 4 páginas" : ""}`;
+
+  const qtd = modoLote ? nomesDaLista().length : (nomeAtual() ? 1 : 0);
+  $("#qtdNomes").textContent = nomesDaLista().length;
+  $("#btZip").hidden = !modoLote;
+  $("#btPdf").textContent = modoLote ? "Baixar o primeiro" : "Baixar PDF";
+  $("#btPdf").disabled = qtd === 0;
+  $("#btPng").disabled = qtd === 0;
+  $("#btZip").disabled = qtd === 0;
+  $("#contexto").innerHTML = modoLote
+    ? `Prévia do primeiro de <b>${qtd}</b> · A4 paisagem`
+    : `A4 paisagem · ${c.programa ? "4 páginas" : "1 página"}`;
+
+  const cv = $("#tela");
+  const escala = 1.4;
+  cv.width = Math.round(P_LARG * escala);
+  cv.height = Math.round(P_ALT * escala);
+  await desenhar(cv.getContext("2d"), escala, dadosAtuais());
+  if (meu !== pedido) return;
+}
+
+function dizer(msg, erro){
+  const e = $("#estado");
+  e.textContent = msg || "";
+  e.classList.toggle("erro", !!erro);
+}
+
+async function comBloqueio(fn){
+  const bts = [...document.querySelectorAll(".palco .bt")];
+  bts.forEach((b) => (b.disabled = true));
+  try { await fn(); }
+  catch (err) { dizer("Não deu para gerar o arquivo: " + err.message, true); }
+  finally { bts.forEach((b) => (b.disabled = false)); atualizar(); }
+}
+
+
+/* ---- ações ---- */
+
+$("#btPdf").onclick = () => comBloqueio(async () => {
+  const d = dadosAtuais();
+  if (!d.nome) return;
+  dizer("Gerando o PDF…");
+  const pags = await paginasDoCertificado(d, +$("#resol").value);
+  baixar(montarPDF(pags), nomeArquivo(d.curso, d.nome, "pdf"));
+  dizer("PDF salvo em Downloads.");
+});
+
+$("#btPng").onclick = () => comBloqueio(async () => {
+  const d = dadosAtuais();
+  if (!d.nome) return;
+  dizer("Gerando o PNG…");
+  const escala = +$("#resol").value;
+  const cv = document.createElement("canvas");
+  cv.width = Math.round(P_LARG * escala);
+  cv.height = Math.round(P_ALT * escala);
+  await desenhar(cv.getContext("2d"), escala, d);
+  const blob = await new Promise((ok) => cv.toBlob(ok, "image/png"));
+  baixar(blob, nomeArquivo(d.curso, d.nome, "png"));
+  dizer("PNG salvo em Downloads." + (d.curso.programa ? " O programa do curso só sai no PDF." : ""));
+});
+
+$("#btZip").onclick = () => comBloqueio(async () => {
+  const lista = nomesDaLista();
+  if (!lista.length) return;
+  const escala = +$("#resol").value;
+  const c = cursoAtual();
+  const arquivos = [];
+  for (let i = 0; i < lista.length; i++){
+    dizer(`Gerando ${i + 1} de ${lista.length} — ${lista[i]}`);
+    await new Promise((r) => setTimeout(r, 0));
+    const pags = await paginasDoCertificado(dadosAtuais(lista[i]), escala);
+    const blob = montarPDF(pags);
+    arquivos.push({ nome: nomeArquivo(c, lista[i], "pdf"), dados: new Uint8Array(await blob.arrayBuffer()) });
+  }
+  dizer("Montando o .zip…");
+  baixar(montarZIP(arquivos), `Certificados - ${limparNome(c.t)} - ${lista.length} alunos.zip`);
+  dizer(`${lista.length} certificados salvos em Downloads.`);
+});
+
+/* ---- modo um / vários ---- */
+
+function trocarModo(lote){
+  modoLote = lote;
+  $("#mUm").setAttribute("aria-pressed", String(!lote));
+  $("#mVarios").setAttribute("aria-pressed", String(lote));
+  $("#boxUm").hidden = lote;
+  $("#boxVarios").hidden = !lote;
+  dizer("");
+  atualizar();
+}
+$("#mUm").onclick = () => trocarModo(false);
+$("#mVarios").onclick = () => trocarModo(true);
+
+/* ---- novo curso ---- */
+
+$("#btNovoCurso").onclick = () => { $("#dlgCurso").showModal(); $("#nvTitulo").focus(); };
+$("#dlgCurso").addEventListener("close", () => {
+  if ($("#dlgCurso").returnValue !== "salvar") return;
+  const t = $("#nvTitulo").value.trim();
+  const h = Math.max(1, Math.round(+$("#nvHoras").value || 0));
+  if (!t || !h) return;
+  const novo = { t, f: $("#nvFrase").value.trim() || undefined, h, m: $("#nvModelo").value, larg: 805 };
+  const lista = meusCursos(); lista.push(novo); gravarMeus(lista);
+  $("#nvTitulo").value = ""; $("#nvFrase").value = ""; $("#nvHoras").value = 20;
+  encherCursos(todosCursos().length - 1);
+  atualizar();
+  dizer(`Curso “${t}” salvo.`);
+});
+
+/* ---- ligações ---- */
+
+["#curso", "#nome", "#nomes", "#cidade", "#data"].forEach((s) => {
+  $(s).addEventListener("input", atualizar);
+});
+
+/* ---- início ---- */
+
+(async () => {
+  $("#data").value = new Date().toLocaleDateString("sv-SE");   // AAAA-MM-DD local
+  await aguardarFontes();
+  encherCursos(0);
+  await atualizar();
+})();
+</script>
+</html>
