@@ -82,14 +82,18 @@ const P_LARG = 1414, P_ALT = 1000, MEIO = P_LARG / 2;
    editor informa — o editor aplica uma escala e os dois diferem ~10,6%. Cada
    valor saiu da razão entre a largura da tinta original e a nossa, sobre 5
    páginas (desvio de 0,0003). `y` já traz a correção vertical medida. */
+/* Regra do dono (23/09/2026): o sinal e sempre o APOSTROFO reto — Dell'Isola.
+   O design do Canva usava tres sinais diferentes na mesma pagina (acento agudo
+   na assinatura, aspa curva no instituto, apostrofo na frase). Nao "corrigir"
+   de volta para o do Canva. */
 const CLARO = {
   titulo:{y:295.63, dx:-0.77, fs:38.343, lh:41,   ff:"Arimo",        pe:400},
   frase: {y:371.63, dx:-2.67, fs:32.329, lh:35,   ff:"Montserrat",   pe:500, txt:"Certificamos por esse documento que"},
   nome:  {y:433.60, dx:-1.70, fs:74.340, lh:80,   ff:"DancingScript",pe:400},
   desc:  {y:530.43, fs:28.075, lh:33.2, ff:"Montserrat",   pe:500},
   data:  {y:622.87, fs:22.110, lh:24,   ff:"Montserrat",   pe:500, base:2},
-  assina:{y:770.63, fs:28.006, lh:36,   ff:"Montserrat",   pe:500, txt:"Alberto Dell´Isola"},
-  inst:  {y:810.33, fs:22.126, lh:28,   ff:"Montserrat",   pe:500, txt:"Instituto Dell’Isola"},
+  assina:{y:770.63, fs:28.006, lh:36,   ff:"Montserrat",   pe:500, txt:"Alberto Dell'Isola"},
+  inst:  {y:810.33, fs:22.126, lh:28,   ff:"Montserrat",   pe:500, txt:"Instituto Dell'Isola"},
   cor:"#000000",
 };
 const LAYOUT = {
