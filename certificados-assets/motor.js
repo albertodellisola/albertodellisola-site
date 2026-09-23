@@ -246,8 +246,19 @@ function gravarCorDoCurso(curso, corId){
   localStorage.setItem("certificados.cores", JSON.stringify(m));
 }
 
+/* O nome do professor NUNCA se parte entre duas linhas (regra do dono,
+   23/09/2026): «ministrado por Alberto / Dell'Isola» estava acontecendo na
+   frase de vários cursos. O quebrar() só parte em espaço comum, então trocar
+   o espaço do nome por um espaço DURO basta — o nome inteiro desce junto.
+   O espaço duro desenha igual ao comum; só não é ponto de quebra. */
+const ESPACO_DURO = "\u00A0";
+
+function colar(s){
+  return s.replace(/ /g, ESPACO_DURO);
+}
+
 function frase(c){
-  return `concluiu com sucesso o curso ${c.f || c.t}, com carga horária de ${doisDig(c.h)} Horas, ministrado por ${PROFESSOR}.`;
+  return `concluiu com sucesso o curso ${c.f || c.t}, com carga horária de ${doisDig(c.h)} Horas, ministrado por ${colar(PROFESSOR)}.`;
 }
 
 /* ========================= desenho ========================= */
