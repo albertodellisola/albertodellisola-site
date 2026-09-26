@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Certificado de conclusão</title>
+<meta name="description" content="Emita o certificado de conclusão do seu curso no Instituto Dell'Isola.">
+
+<style>
+@font-face{font-family:'Montserrat';font-weight:400;font-style:normal;font-display:swap;src:url(../certificados-assets/fontes/Montserrat-Regular.woff2) format('woff2')}
+@font-face{font-family:'Montserrat';font-weight:500;font-style:normal;font-display:swap;src:url(../certificados-assets/fontes/Montserrat-Medium.woff2) format('woff2')}
+@font-face{font-family:'Montserrat';font-weight:700;font-style:normal;font-display:swap;src:url(../certificados-assets/fontes/Montserrat-Bold.woff2) format('woff2')}
+@font-face{font-family:'DancingScript';font-weight:400;font-style:normal;font-display:swap;src:url(../certificados-assets/fontes/DancingScript-Regular.woff2) format('woff2')}
+@font-face{font-family:'Arimo';font-weight:400;font-style:normal;font-display:swap;src:url(../certificados-assets/fontes/Arimo-Regular.woff2) format('woff2')}
+
+:root{
+  --tinta:#101d2a; --tinta-fraca:#4c5f74; --tinta-tenue:#7b8a9c;
+  --fundo:#eef1f6; --papel:#ffffff; --palco:#2c3646;
+  --traco:#d6dde7; --traco-forte:#b8c4d2;
+  --acento:#1A67DC; --acento-forte:#1354b6; --acento-tenue:#e7effc;
+  --alerta:#a4442a; --alerta-tenue:#fbeee9;
+  --sombra:0 1px 2px rgba(16,29,42,.07), 0 10px 30px -14px rgba(16,29,42,.3);
+  --raio:12px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --tinta:#e6ecf4; --tinta-fraca:#a3b1c2; --tinta-tenue:#74849a;
+    --fundo:#0b1118; --papel:#141c26; --palco:#070b10;
+    --traco:#233040; --traco-forte:#334357;
+    --acento:#6ba3ff; --acento-forte:#8ebaff; --acento-tenue:#132131;
+    --alerta:#e08a6d; --alerta-tenue:#2a1a14;
+    --sombra:0 1px 2px rgba(0,0,0,.45), 0 10px 32px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --tinta:#e6ecf4; --tinta-fraca:#a3b1c2; --tinta-tenue:#74849a;
+  --fundo:#0b1118; --papel:#141c26; --palco:#070b10;
+  --traco:#233040; --traco-forte:#334357;
+  --acento:#6ba3ff; --acento-forte:#8ebaff; --acento-tenue:#132131;
+  --alerta:#e08a6d; --alerta-tenue:#2a1a14;
+  --sombra:0 1px 2px rgba(0,0,0,.45), 0 10px 32px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+body{
+  margin:0; background:var(--fundo); color:var(--tinta);
+  font-family:'Montserrat','Helvetica Neue',Arial,system-ui,sans-serif;
+  font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+h1,h2{margin:0; text-wrap:balance; font-weight:700; letter-spacing:-.015em}
+
+.topo{
+  background:var(--papel); border-bottom:1px solid var(--traco);
+  padding:16px 16px; display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+}
+.topo .marca{font-weight:700; font-size:15px; letter-spacing:-.01em}
+.topo .sub{font-family:'Arimo',Arial,sans-serif; font-size:12px; color:var(--tinta-tenue); letter-spacing:.06em; text-transform:uppercase}
+
+main{max-width:940px; margin:0 auto; padding:26px 16px 64px}
+
+.cabeca{margin-bottom:26px}
+.cabeca .selo{
+  display:inline-block; font-family:'Arimo',Arial,sans-serif; font-size:11px;
+  letter-spacing:.11em; text-transform:uppercase; font-weight:700;
+  color:var(--acento); background:var(--acento-tenue);
+  padding:5px 10px; border-radius:99px; margin-bottom:12px;
+}
+.cabeca h1{font-size:clamp(23px,5.4vw,32px)}
+.cabeca p{margin:8px 0 0; color:var(--tinta-fraca); font-size:14.5px}
+
+.cartao{
+  background:var(--papel); border:1px solid var(--traco); border-radius:var(--raio);
+  box-shadow:var(--sombra); padding:20px 18px;
+}
+.rotulo{
+  display:block; font-family:'Arimo',Arial,sans-serif; font-size:11px;
+  letter-spacing:.09em; text-transform:uppercase; color:var(--tinta-tenue);
+  font-weight:700; margin-bottom:8px;
+}
+.campo{
+  width:100%; padding:13px 14px; border:1px solid var(--traco-forte);
+  border-radius:10px; background:var(--papel); color:var(--tinta);
+  font:inherit; font-size:16px;              /* 16px: abaixo disso o iOS dá zoom */
+}
+.campo:focus{outline:2px solid var(--acento); outline-offset:1px; border-color:var(--acento)}
+.dica{margin:9px 0 0; font-size:13px; color:var(--tinta-tenue); line-height:1.45}
+.grupoCurso{margin:0 0 20px; padding:0 0 18px; border-bottom:1px solid var(--traco)}
+select.campo{
+  appearance:none; padding-right:36px; cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,var(--tinta-fraca) 50%),
+                   linear-gradient(135deg,var(--tinta-fraca) 50%,transparent 50%);
+  background-position:calc(100% - 19px) calc(50% + 2px),calc(100% - 13px) calc(50% + 2px);
+  background-size:6px 6px,6px 6px; background-repeat:no-repeat;
+}
+
+.aviso{
+  margin:12px 0 0; padding:11px 13px; border-radius:10px; font-size:13.5px;
+  background:var(--alerta-tenue); color:var(--alerta); border:1px solid currentColor;
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+}
+.aviso button{
+  font:inherit; font-weight:600; font-size:13px; cursor:pointer;
+  background:transparent; color:inherit; border:1px solid currentColor;
+  border-radius:8px; padding:5px 10px;
+}
+
+.palco{
+  margin:22px 0 0; padding:16px; background:var(--palco);
+  border-radius:var(--raio); display:flex; justify-content:center;
+}
+.palco canvas{
+  width:100%; height:auto; display:block; border-radius:3px;
+  box-shadow:0 10px 34px -14px rgba(0,0,0,.75);
+}
+.legenda{
+  margin:11px 0 0; font-size:13px; color:var(--tinta-fraca);
+  text-align:center; text-wrap:balance;
+}
+
+.acoes{display:flex; gap:10px; flex-wrap:wrap; margin:22px 0 0}
+.bt{
+  flex:1 1 210px; padding:14px 18px; border-radius:10px; border:1px solid var(--traco-forte);
+  background:var(--papel); color:var(--tinta); cursor:pointer; font:inherit;
+  font-weight:600; font-size:15px; display:inline-flex; align-items:center;
+  justify-content:center; gap:8px;
+}
+.bt:hover{border-color:var(--acento); color:var(--acento)}
+.bt:focus-visible{outline:2px solid var(--acento); outline-offset:2px}
+.bt[disabled]{opacity:.45; cursor:not-allowed}
+.bt.forte{background:var(--acento); border-color:var(--acento); color:#fff}
+.bt.forte:hover:not([disabled]){background:var(--acento-forte); border-color:var(--acento-forte); color:#fff}
+
+.recado{margin:14px 0 0; font-size:13.5px; color:var(--tinta-fraca); min-height:1.4em}
+
+.rodape{
+  margin:40px auto 0; max-width:940px; padding:22px 16px 0;
+  border-top:1px solid var(--traco); color:var(--tinta-tenue); font-size:12.5px;
+}
+.rodape a{color:inherit}
+</style>
+
+<header class="topo">
+  <span class="marca">Instituto Dell'Isola</span>
+  <span class="sub">Certificado de conclusão</span>
+</header>
+
+<main>
+  <div class="cabeca">
+    <span class="selo">Emissão do aluno</span>
+    <h1 id="titulo">Certificado de conclusão</h1>
+    <p id="resumo"></p>
+  </div>
+
+  <section class="cartao">
+    <div class="grupoCurso" id="grupoCurso" hidden>
+      <label class="rotulo" for="curso">Qual curso você concluiu?</label>
+      <select class="campo" id="curso"></select>
+      <p class="dica">Precisa do certificado de mais de um? Emita um, depois troque o curso aqui e emita o outro.</p>
+    </div>
+    <label class="rotulo" for="nome">Seu nome completo</label>
+    <input class="campo" id="nome" type="text" autocomplete="name" spellcheck="false" maxlength="70"
+           placeholder="Como deve sair impresso no certificado">
+    <p class="dica">O nome sai no certificado exatamente como estiver aqui &mdash; com acento, sobrenome e maiúsculas. Confira antes de baixar.</p>
+    <div class="aviso" id="aviso" hidden>
+      <span id="avisoTexto"></span>
+      <button type="button" id="btArrumar">Arrumar</button>
+    </div>
+  </section>
+
+  <figure class="palco" style="margin-block-end:0">
+    <canvas id="tela" width="990" height="700" aria-label="Prévia do certificado"></canvas>
+  </figure>
+  <p class="legenda">Prévia. O arquivo baixado sai em alta resolução, em A4 paisagem.</p>
+
+  <div class="acoes">
+    <button class="bt forte" id="btPDF" disabled>Baixar o certificado (PDF)</button>
+    <button class="bt" id="btPNG" disabled>Baixar como imagem (PNG)</button>
+  </div>
+  <p class="recado" id="recado" role="status" aria-live="polite">Digite seu nome para liberar o download.</p>
+</main>
+
+<footer class="rodape">
+  <p>Instituto Dell'Isola &middot; <a href="/">albertodellisola.com</a><br>
+  O certificado é gerado no seu próprio navegador: o nome digitado não é enviado a servidor nenhum.</p>
+</footer>
+
+<script src="../certificados-assets/motor.js"></script>
+<script>
+"use strict";
+
+/* ========================= interface do aluno ========================= */
+
+/* Que cursos esta página emite. A lista vem do `fonte/paginas.json` pelo build,
+   então uma página nova é uma entrada naquele arquivo — não é copiar HTML.
+   Cada título tem que bater com o catálogo do motor; se alguém renomear um
+   curso lá, a página para e avisa, em vez de emitir o certificado errado em
+   silêncio. O gate confere isso antes, no build. */
+const CURSOS_DESTA_PAGINA = ["Aprenda Hipnose do Zero", "Imersão Em Hipnose Para Manejo de Dor", "Auto-Hipnose Científica", "Hipnose Para o Controle da Ansiedade", "Hipnose Não Verbal E Neurociências", "Hipnose Para Tratar Vícios"];
+const CIDADE = "Belo Horizonte";
+
+/* Resoluções do emissor: 300 dpi em A4 para o PDF, 2400 px (o do Canva) para
+   o PNG — imagem de 3508 px vira arquivo grande demais para pouco ganho. */
+const ESC_PDF = 2.481, ESC_PNG = 1.697, ESC_PREVIA = 0.7;
+
+const daPagina = CURSOS_DESTA_PAGINA.map(t => CURSOS.find(c => c.t === t));
+const faltando = CURSOS_DESTA_PAGINA.filter((t, i) => !daPagina[i]);
+let curso = daPagina[0];
+
+function hojeISO(){
+  return new Date().toLocaleDateString("sv-SE");   // AAAA-MM-DD no fuso local
+}
+
+function nomeDigitado(){
+  return $("#nome").value.replace(/\s+/g, " ").trim();
+}
+
+function dados(){
+  return { curso, nome: nomeDigitado(), cidade: CIDADE, dataISO: hojeISO() };
+}
+
+function descrever(c){
+  return `Carga horária de ${doisDig(c.h)} horas, ministrado por ${PROFESSOR}.`;
+}
+
+function dizer(t){ $("#recado").textContent = t; }
+
+/* ---- caixa alta e caixa baixa ----
+   O nome sai em letra manuscrita. FULANO DE TAL e fulano de tal saem legíveis,
+   mas feios, e o aluno costuma só perceber depois de baixar. Aviso com conserto
+   em um clique; nunca troco por conta própria, porque nome é do dono dele. */
+
+const PARTICULAS = new Set(["de","da","do","das","dos","e","di","du","del","della","van","von","y"]);
+
+function arrumarCaixa(s){
+  return s.split(" ").map((p, i) => {
+    const b = p.toLocaleLowerCase("pt-BR");
+    if (i > 0 && PARTICULAS.has(b)) return b;
+    return b.replace(/^([a-zà-ÿ])/, (m) => m.toLocaleUpperCase("pt-BR"));
+  }).join(" ");
+}
+
+function conferirCaixa(){
+  const n = nomeDigitado();
+  const letras = n.replace(/[^a-zA-ZÀ-ÿ]/g, "");
+  let recado = "";
+  if (letras.length >= 3){
+    if (letras === letras.toLocaleUpperCase("pt-BR")) recado = "Seu nome está todo em maiúsculas. Na letra manuscrita do certificado isso fica ruim.";
+    else if (letras === letras.toLocaleLowerCase("pt-BR")) recado = "Seu nome está todo em minúsculas.";
+  }
+  $("#aviso").hidden = !recado;
+  if (recado) $("#avisoTexto").textContent = recado;
+}
+
+$("#btArrumar").onclick = () => {
+  $("#nome").value = arrumarCaixa(nomeDigitado());
+  atualizar();
+  $("#nome").focus();
+};
+
+/* ---- prévia ---- */
+
+let pintando = null;
+
+async function atualizar(){
+  const n = nomeDigitado();
+  const pronto = n.length >= 3;
+  $("#btPDF").disabled = $("#btPNG").disabled = !pronto;
+  conferirCaixa();
+
+  const cv = $("#tela");
+  cv.width  = Math.round(P_LARG * ESC_PREVIA);
+  cv.height = Math.round(P_ALT  * ESC_PREVIA);
+  pintando = desenhar(cv.getContext("2d"), ESC_PREVIA, dados());
+  await pintando;
+
+  if (!n) dizer("Digite seu nome para liberar o download.");
+  else if (!pronto) dizer("Faltam letras no nome.");
+  else dizer("");
+}
+
+/* ---- download ---- */
+
+async function comCanvas(escala){
+  const cv = document.createElement("canvas");
+  cv.width  = Math.round(P_LARG * escala);
+  cv.height = Math.round(P_ALT  * escala);
+  await desenhar(cv.getContext("2d"), escala, dados());
+  return cv;
+}
+
+async function baixando(bt, texto, tarefa){
+  const rotulo = bt.textContent;
+  bt.disabled = true; bt.textContent = "Gerando…"; dizer(texto);
+  try {
+    await tarefa();
+    dizer("Pronto. O arquivo está na pasta de downloads do seu aparelho.");
+  } catch (e) {
+    dizer("Não deu para gerar o arquivo. Recarregue a página e tente de novo.");
+    console.error(e);
+  } finally {
+    bt.textContent = rotulo; bt.disabled = false;
+  }
+}
+
+$("#btPDF").onclick = () => baixando($("#btPDF"), "Montando o PDF…", async () => {
+  const pags = await paginasDoCertificado(dados(), ESC_PDF);
+  baixar(montarPDF(pags), nomeArquivo(curso, nomeDigitado(), "pdf"));
+});
+
+$("#btPNG").onclick = () => baixando($("#btPNG"), "Montando a imagem…", async () => {
+  const cv = await comCanvas(ESC_PNG);
+  const blob = await new Promise((ok) => cv.toBlob(ok, "image/png"));
+  baixar(blob, nomeArquivo(curso, nomeDigitado(), "png"));
+});
+
+/* ---- início ---- */
+
+$("#nome").addEventListener("input", atualizar);
+
+(async () => {
+  if (faltando.length){
+    dizer(`Não achei no catálogo: ${faltando.join(", ")}. Avise o Instituto.`);
+    $("#nome").disabled = true;
+    return;
+  }
+
+  if (daPagina.length > 1){
+    const sel = $("#curso");
+    daPagina.forEach((c, i) => {
+      const o = document.createElement("option");
+      o.value = i; o.textContent = c.t;
+      sel.appendChild(o);
+    });
+    sel.value = "0";
+    sel.addEventListener("change", async () => {
+      curso = daPagina[+sel.value];
+      $("#titulo").textContent = curso.t;
+      $("#resumo").textContent = descrever(curso);
+      await atualizar();
+    });
+    $("#grupoCurso").hidden = false;
+  }
+
+  $("#titulo").textContent = curso.t;
+  $("#resumo").textContent = descrever(curso);
+  await aguardarFontes();
+  await atualizar();
+})();
+</script>
+</html>
